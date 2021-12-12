@@ -2,6 +2,7 @@
 import { Cluster, Keypair } from "@solana/web3.js";
 import { Connection, clusterApiUrl } from "@solana/web3.js";
 import { message } from "antd";
+import { LAMPORTS_PER_SOL } from "@solana/web3.js";
 
 // *Step 3*: implement a function that gets an account's balance
 const refreshBalance = async (network: Cluster | undefined, account: Keypair | null) => {
@@ -25,7 +26,7 @@ const refreshBalance = async (network: Cluster | undefined, account: Keypair | n
     // Documentation Reference: https://solana-labs.github.io/solana-web3.js/classes/Connection.html
     const balance = await connection.getBalance(publicKey);
 
-    return balance;
+    return balance / LAMPORTS_PER_SOL;
     // (e) You can now delete the console.log statement since the function is implemented!
   } catch (error) {
     const errorMessage =
@@ -47,22 +48,25 @@ const handleAirdrop = async (network: Cluster, account: Keypair | null) => {
     //   https://solana-labs.github.io/solana-web3.js/classes/Connection.html
     //   https://solana-labs.github.io/solana-web3.js/modules.html#clusterApiUrl
     console.log("Airdrop functionality not implemented yet!");
-    const connection = "";
+    const connection = new Connection(clusterApiUrl(network), "confirmed");
 
     // (c) get the key using one of the accessors on the account passed in as an argument
     // Documentation Reference: https://solana-labs.github.io/solana-web3.js/classes/Keypair.html
-    const publicKey = "";
+    const publicKey = account.publicKey;
 
     // (d) request the airdrop using the connection instance
     // Note that you should include the amount to airdrop (consider using the LAMPORTS_PER_SOL constant from the web3.js library)
     // Documentation Reference: https://solana-labs.github.io/solana-web3.js/classes/Connection.html
-    const confirmation = "";
-
+    const confirmation = await connection.requestAirdrop(
+      publicKey,
+      LAMPORTS_PER_SOL
+    );
     // (d) confirm the transaction using the connection instance and the confirmation string returned from the airdrop
     // Documentation Reference: https://solana-labs.github.io/solana-web3.js/classes/Connection.html
-    const result = "";
+    await connection.confirmTransaction(confirmation, "confirmed");
 
     // (e) Refactor the refreshBalance function to return balances in SOL instead of Lamports (Hint: LAMPORTS_PER_SOL)
+
 
     // This line returns the balance after the airdrop so the UI can be refreshed
     return await refreshBalance(network, account);
