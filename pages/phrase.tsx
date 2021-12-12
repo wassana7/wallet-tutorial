@@ -10,7 +10,7 @@ import { useRouter } from "next/router";
 import * as Bip39 from "bip39";
 
 // Import the Keypair class from Solana's web3.js library:
-import * as solanaWeb3 from '@solana/web3.js';
+import { Keypair } from '@solana/web3.js';
 
 const Phrase: NextPage = () => {
   const [loading, setLoading] = useState<boolean>(false);
